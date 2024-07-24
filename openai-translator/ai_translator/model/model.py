@@ -1,18 +1,17 @@
 from book import ContentType
 
 class Model:
-    def make_text_prompt(self, text: str, target_language: str) -> str:
-        return f"翻译为{target_language}：{text}"
+    def make_text_prompt(self, text: str, original_language: str, target_language: str) -> str:
+        return f"Please translate the following text from {original_language} to {target_language}, keeping the original simple syntax: {text}"
 
-    def make_table_prompt(self, table: str, target_language: str) -> str:
-        # return f"翻译为{target_language}，保持间距（空格，分隔符），以表格形式返回：\n{table}"
-        return f"翻译为{target_language}，以空格和换行符表示表格：\n{table}"
+    def make_table_prompt(self, table: str, original_language: str, target_language: str) -> str:
+        return f"Please translate the following table from {original_language} to {target_language}, keeping the spacing (spaces, separators), and return it in table format:\n{table}"
 
-    def translate_prompt(self, content, target_language: str) -> str:
+    def translate_prompt(self, content, original_language: str, target_language: str) -> str:
         if content.content_type == ContentType.TEXT:
-            return self.make_text_prompt(content.original, target_language)
+            return self.make_text_prompt(content.original, original_language, target_language)
         elif content.content_type == ContentType.TABLE:
-            return self.make_table_prompt(content.get_original_as_str(), target_language)
+            return self.make_table_prompt(content.get_original_as_str(), original_language, target_language)
 
     def make_request(self, prompt):
         raise NotImplementedError("子类必须实现 make_request 方法")
